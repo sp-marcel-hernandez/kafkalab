@@ -2,8 +2,8 @@ version: '3.8'
 
 services:
   starter:
-    image: dadarek/wait-for-dependencies
-    command: kafka:9092
+    image: dadarek/wait-for-dependencies:latest
+    command: zookeeper:2181 kafka:9092
     environment:
       - SLEEP_LENGTH=1
       - TIMEOUT_LENGTH=100
