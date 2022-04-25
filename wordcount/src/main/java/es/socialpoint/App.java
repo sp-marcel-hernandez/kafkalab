@@ -26,6 +26,9 @@ public class App {
         System.out.println(topology.describe());
 
         KafkaStreams application = new KafkaStreams(topology, config);
+
+        application.cleanUp();
+
         application.start();
 
         Runtime.getRuntime().addShutdownHook(new Thread(application::close));
