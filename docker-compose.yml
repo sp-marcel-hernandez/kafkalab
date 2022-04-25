@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  starter:
+    image: dadarek/wait-for-dependencies
+    command: kafka:9092
+    environment:
+      - SLEEP_LENGTH=1
+      - TIMEOUT_LENGTH=100
+    depends_on:
+      - zookeeper
+      - kafka
+      - kowl
+
+  zookeeper:
+    image: 077212880246.dkr.ecr.us-east-1.amazonaws.com/upstream/confluentinc/cp-zookeeper:6.2.1
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  kafka:
+    image: 077212880246.dkr.ecr.us-east-1.amazonaws.com/upstream/confluentinc/cp-kafka:6.2.1
+    depends_on:
+      - zookeeper
+    ports:
+      - "127.0.0.1:29092:29092"
+    environment:
+      KAFKA_BROKER_ID: '1'
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT'
+      KAFKA_INTER_BROKER_LISTENER_NAME: 'PLAINTEXT'
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: '1'
+      KAFKA_TRANSACTION_STAT_LOG_REPLICATION_FACTOR: '1'
+      KAFKA_JMX_PORT: '9581'
+      KAFKA_LOG_RETENTION_HOURS: '4'
+      KAFKA_LOG_ROLL_MS: '600000'
+      KAFKA_LOG_SEGMENT_BYTES: '1073741824'
+      KAFKA_LOG_RETENTION_CHECK_INTERVAL_MS: '300000'
+      KAFKA_CLEANUP_POLICY: 'delete'
+      KAFKA_RETENTION_MS: '43200000'
+      KAFKA_MESSAGE_MAX_BYTES: '60010000'
+      KAFKA_RECEIVE_MESSAGE_MAX_BYTES: '60010000'
+      KAFKA_REPLICA_FETCH_MAX_BYTES: '60010000'
+      KAFKA_LOG4J_ROOT_LOGLEVEL: "DEBUG"
+      KAFKA_DELETE_TOPIC_ENABLE: 'true'
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
+      ADVERTISED_LISTENER: 'kafka'
+
+  kowl:
+    image: quay.io/cloudhut/kowl:master
+    restart: on-failure
+    ports:
+      - "127.0.0.1:8080:8080"
+    environment:
+      KAFKA_BROKERS: kafka:9092
