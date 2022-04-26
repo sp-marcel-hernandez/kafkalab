@@ -6,6 +6,7 @@ import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.Topology;
+import org.apache.kafka.streams.kstream.Consumed;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.KTable;
 import org.apache.kafka.streams.kstream.Produced;
@@ -37,17 +38,19 @@ public class App {
     private static Topology defineTopology() {
         StreamsBuilder builder = new StreamsBuilder();
 
-        KStream<String, String> input = builder.stream("wordcount-input");
+        KStream<String, String> input = builder.stream(
+                "wordcount-input",
+                Consumed.with(Serdes.String(), Serdes.String())
+        );
 
-        KTable<String, String> output = input
+        KTable<String, Long> wordcount = input
                 .mapValues(value -> value.toLowerCase())
                 .flatMapValues(value -> Arrays.asList(value.split(" ")))
                 .selectKey((key, value) -> value)
                 .groupByKey()
-                .count()
-                .mapValues(value -> Long.toString(value));
+                .count();
 
-        output.toStream().to("wordcount-output", Produced.with(Serdes.String(), Serdes.String()));
+        wordcount.toStream().to("wordcount-output", Produced.with(Serdes.String(), Serdes.Long()));
 
         return builder.build();
     }
