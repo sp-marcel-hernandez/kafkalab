@@ -28,6 +28,7 @@ public class App {
 
         KafkaStreams application = new KafkaStreams(topology, config);
 
+        // Cleans up local RocksDB state. Only use it at dev time /!\
         application.cleanUp();
 
         application.start();
