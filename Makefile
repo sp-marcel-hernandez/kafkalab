@@ -7,6 +7,7 @@ up:
 	docker-compose exec kafka bash -c 'kafka-topics --create --zookeeper zookeeper:2181 --replication-factor 1 --partitions 1 --topic favcolors-input'
 	docker-compose exec kafka bash -c 'kafka-topics --create --zookeeper zookeeper:2181 --replication-factor 1 --partitions 1 --topic favcolors-output'
 	docker-compose exec kafka bash -c 'kafka-topics --create --zookeeper zookeeper:2181 --replication-factor 1 --partitions 1 --topic favcolors-intermediate-table --config cleanup.policy=compact'
+	docker-compose exec kafka bash -c 'kafka-topics --create --zookeeper zookeeper:2181 --replication-factor 1 --partitions 1 --topic bank-transactions'
 
 down:
 	docker-compose down -v
