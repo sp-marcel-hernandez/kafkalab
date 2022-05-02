@@ -12,6 +12,7 @@
 
     <modules>
         <module>bankproducer</module>
+        <module>bankstream</module>
         <module>favcolors</module>
         <module>wordcount</module>
     </modules>
