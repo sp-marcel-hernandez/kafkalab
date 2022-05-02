@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-* OpenJDK 17
+* JDK 17, preferably a [Temurin OpenJDK build](https://adoptium.net/)
 * Maven 3.8+
 
 ## Test and Build
