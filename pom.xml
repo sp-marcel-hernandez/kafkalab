@@ -11,8 +11,9 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>wordcount</module>
+        <module>bankproducer</module>
         <module>favcolors</module>
+        <module>wordcount</module>
     </modules>
 
     <build>
